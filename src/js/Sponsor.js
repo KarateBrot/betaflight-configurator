@@ -13,23 +13,51 @@ export default class Sponsor {
             return;
         }
 
-        if (!this._div) {
-            return;
+        const activeTheme = DarkTheme.enabled ? 'dark' : 'light';
+
+        const images = [
+            `<img src="images/sponsors/hqprop.svg" alt="HQ Prop" class="img_sponsor invertable" />`,
+            `<img src="images/sponsors/radiomaster.svg" alt="RadioMaster" class="img_sponsor invertable" />`,
+            `<img src="images/sponsors/Axisflying_${activeTheme}.svg" alt="Axisflying" class="img_sponsor" />`,
+            `<img src="images/sponsors/dogcom_${activeTheme}.svg" alt="Dogcom" class="img_sponsor" />`,
+            `<img src="images/sponsors/foxeer_${activeTheme}.svg" alt="Foxeer" class="img_sponsor" />`,
+            `<img src="images/sponsors/tmotor.svg" alt="T-Motor" class="img_sponsor invertable" />`,
+        ];
+
+        const links = [
+            'https://www.hqprop.com',
+            'https://www.radiomasterrc.com',
+            'https://www.axisflying.com',
+            'https://www.dogcombattery.com',
+            'https://www.foxeer.com',
+            'https://tmotorhobby.com',
+        ];
+
+        const numImages = images.length;
+        const numVisible = 3;
+        let indices = [];
+
+        for(let i = 0; i < numVisible; i++) {
+            let indexRand = Math.floor(Math.random() * numImages);
+            while(indices.includes(indexRand)) {
+                indexRand = Math.floor(Math.random() * numImages);
+            }
+            indices.push(indexRand);
         }
 
-        this._api.loadSponsorTile(DarkTheme.enabled ? 'dark' : 'light', this._name,
-            (content) => {
-                if (content) {
-                    this._div.fadeOut(500, () => {
-                        this._div.html(content);
-                        this._div.fadeIn(500);
-                    });
-                    this._div.show();
-                } else {
-                    this._div.hide();
-                }
-            },
-        );
+        let wrap = $('<div>').attr('style', 'max-height: 100%; height: 100%; width: 100%; text-align: center; margin: 0 auto');
+
+        for(let i = 0; i < indices.length; i++) {
+            $('<a>')
+                .attr('href', `${links[indices[i]]}`)
+                .attr('target', '_blank')
+                .html(images[indices[i]])
+                .appendTo(wrap);
+        }
+
+        wrap.appendTo(div);
+
+        div.show();
     }
 
     loadSponsorTile(name, div) {
